@@ -560,3 +560,12 @@ window.addEventListener('resize', () => {
 
 // ── Init ───────────────────────────────────────────────────────────────────
 initSocket();
+
+// Expose for Playwright/devtools access
+window._game = {
+  get socket()     { return socket; },
+  get roomCode()   { return roomCode; },
+  get gameState()  { return gameState; },
+  get myRole()     { return myRole; },
+  get validMoves() { return validMoves; },
+};
