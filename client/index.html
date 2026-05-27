@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quoridor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Lobby ─────────────────────────────────────────────────── -->
+  <div id="screen-lobby" class="screen active">
+    <h1 class="lobby-title">Quoridor</h1>
+    <p class="lobby-subtitle">2-player abstract strategy · online</p>
+    <div class="lobby-actions">
+      <button class="btn primary" id="btn-create">Create Game</button>
+      <button class="btn" id="btn-show-join">Join Game</button>
+    </div>
+    <div class="join-form" id="join-form" style="display:none">
+      <input id="room-code-input" maxlength="6" placeholder="XXXXXX" autocomplete="off" spellcheck="false" />
+      <button class="btn" id="btn-join">Join</button>
+    </div>
+    <p id="lobby-error" style="color:#E85D4A;font-size:0.8rem;min-height:1.2em;"></p>
+  </div>
+
+  <!-- ── Waiting ───────────────────────────────────────────────── -->
+  <div id="screen-waiting" class="screen">
+    <p class="lobby-subtitle">Share this code with your opponent</p>
+    <div class="room-code-display" id="waiting-code">------</div>
+    <p class="waiting-label">Waiting for opponent…</p>
+    <button class="btn" id="btn-cancel-wait">Cancel</button>
+  </div>
+
+  <!-- ── Game ──────────────────────────────────────────────────── -->
+  <div id="screen-game" class="screen">
+    <div class="board-wrapper" id="board-wrapper">
+      <canvas id="board-canvas"></canvas>
+    </div>
+
+    <div class="hud">
+      <div class="hud-section">
+        <span class="hud-label">Turn</span>
+        <div class="turn-indicator" id="turn-indicator">
+          <div class="turn-dot" id="turn-dot"></div>
+          <span id="turn-text">—</span>
+        </div>
+      </div>
+
+      <div class="hud-section">
+        <span class="hud-label">Walls</span>
+        <div class="walls-row">
+          <div class="walls-dot" style="background:#E85D4A"></div>
+          <span id="walls-p1">P1: 10</span>
+        </div>
+        <div class="walls-row">
+          <div class="walls-dot" style="background:#4A90D9"></div>
+          <span id="walls-p2">P2: 10</span>
+        </div>
+      </div>
+
+      <div class="hud-section">
+        <span class="hud-label">Mode</span>
+        <span class="mode-label" id="mode-label">Move</span>
+        <button class="btn" id="btn-wall-mode" style="margin-top:6px">Place Wall</button>
+      </div>
+
+      <div class="hud-section" id="hud-role-section">
+        <span class="hud-label">You are</span>
+        <div class="turn-indicator">
+          <div class="turn-dot" id="my-role-dot"></div>
+          <span id="my-role-text">—</span>
+        </div>
+      </div>
+
+      <div class="hud-section">
+        <span class="hud-label">Room</span>
+        <span style="font-size:0.75rem;letter-spacing:0.1em;color:var(--text-muted)" id="hud-room-code">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Game Over Overlay ─────────────────────────────────────── -->
+  <div id="overlay">
+    <div class="overlay-title" id="overlay-title">Player 1 Wins!</div>
+    <div class="overlay-sub" id="overlay-sub"></div>
+    <button class="btn primary" id="btn-rematch">Rematch</button>
+    <button class="btn" id="btn-new-game">New Game</button>
+  </div>
+
+  <!-- ── Toast ─────────────────────────────────────────────────── -->
+  <div id="toast"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

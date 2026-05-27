@@ -1,0 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #1A1917;
+  --board-cell: #2E2C28;
+  --board-border: #3D3B36;
+  --wall-color: #F0EBE0;
+  --p1-color: #E85D4A;
+  --p2-color: #4A90D9;
+  --valid-move: rgba(72, 199, 142, 0.35);
+  --text-primary: #F0EBE0;
+  --text-muted: #888780;
+  --accent: #F0C060;
+  --board-bg: #242220;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Space Mono', monospace;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* ── Screens ─────────────────────────────────────────────────────── */
+.screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  animation: fadeIn 0.2s ease;
+}
+
+.screen.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Lobby ───────────────────────────────────────────────────────── */
+.lobby-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.lobby-subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.lobby-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  border: 2px solid var(--text-primary);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--text-primary);
+  color: var(--bg);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.btn.primary:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn.active-mode {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.join-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.join-form input {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  background: var(--board-cell);
+  border: 2px solid var(--board-border);
+  color: var(--text-primary);
+  width: 140px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.join-form input:focus {
+  border-color: var(--accent);
+}
+
+/* ── Waiting ─────────────────────────────────────────────────────── */
+.room-code-display {
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  background: var(--board-cell);
+  padding: 16px 32px;
+  border: 2px solid var(--board-border);
+}
+
+.waiting-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Game layout ─────────────────────────────────────────────────── */
+#screen-game {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.board-wrapper {
+  position: relative;
+  background: var(--board-bg);
+  padding: 12px;
+  border: 2px solid var(--board-border);
+}
+
+#board-canvas {
+  display: block;
+  cursor: default;
+}
+
+/* ── HUD ─────────────────────────────────────────────────────────── */
+.hud {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 180px;
+  max-width: 220px;
+}
+
+.hud-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hud-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.turn-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.turn-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.walls-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.walls-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.mode-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ── Toast ───────────────────────────────────────────────────────── */
+#toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: #3D3B36;
+  color: var(--text-primary);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  padding: 10px 20px;
+  border-left: 3px solid var(--p1-color);
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Overlay (game over) ─────────────────────────────────────────── */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 25, 23, 0.88);
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+}
+
+#overlay.active {
+  display: flex;
+  animation: fadeIn 0.25s ease;
+}
+
+.overlay-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.overlay-sub {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+/* ── Board shake animation ───────────────────────────────────────── */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+.board-wrapper.shake {
+  animation: shake 0.35s ease;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  #screen-game {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hud {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
